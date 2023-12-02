@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="40dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:background="#252525">
+        <TextView
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_designed"
+            android:fontFamily="@font/nunitoregular"
+            android:textColor="@color/white"
+            android:text="Designed by - "/>
+
+        <TextView
+            android:layout_marginLeft="20dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_Redesigned"
+            android:fontFamily="@font/nunitoregular"
+            android:textColor="@color/white"
+            android:text="Redesigned by - "/>
+        <TextView
+            android:layout_marginLeft="20dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_lllustratión"
+            android:fontFamily="@font/nunitoregular"
+            android:textColor="@color/white"
+            android:text="lllustrations - "/>
+        <TextView
+            android:layout_marginLeft="20dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_icons"
+            android:fontFamily="@font/nunitoregular"
+            android:textColor="@color/white"
+            android:text="Icons - "/>
+        <TextView
+            android:layout_marginLeft="20dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_font"
+            android:fontFamily="@font/nunitoregular"
+            android:textColor="@color/white"
+            android:text="Font -  - "/>
+        <TextView
+            android:layout_marginBottom="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_madeBy"
+            android:text="Made by -  - "
+            android:fontFamily="@font/nunitoregular"
+            android:textColor="@color/white"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/icon_back"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/white"
+        android:id="@+id/imgbut_back"
+        android:scaleType="fitXY"/>
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/icon_edit"
+        android:id="@+id/imgbut_edit"
+        android:scaleType="fitCenter"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>
