@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toolbar_main"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:padding="20dp">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Notes"
-        android:fontFamily="@font/nunitoblack"
-        android:textSize="30sp"
-        android:layout_alignParentLeft="true" />
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_detail"
-        android:id="@+id/imgbut_introduce"
-        android:background="#3B3B3B"
+    android:background="@color/black">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notes"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/nunitoregular"
+                    android:textSize="34sp"
+                    android:layout_alignParentLeft="true" />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_introduce"
+                    android:id="@+id/imgbut_introduce"
+                    android:visibility="visible"
+                    android:background="#3B3B3B"
+                    android:layout_alignParentEnd="true"/>
+                <androidx.appcompat.widget.SearchView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imgbut_search"
+                    android:background="#3B3B3B"
+                    android:layout_marginRight="30dp"
 
-        android:layout_alignParentEnd="true"/>
-    <ImageButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/icon_search"
-        android:id="@+id/imgbut_search"
-        android:background="#3B3B3B"
-        android:layout_marginRight="30dp"
+                    android:layout_toLeftOf="@+id/imgbut_introduce"/>
 
-        android:layout_toLeftOf="@+id/imgbut_introduce"/>
-</RelativeLayout>
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+
+</com.google.android.material.appbar.AppBarLayout>

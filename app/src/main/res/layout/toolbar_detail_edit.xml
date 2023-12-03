@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="80dp"
+    android:padding="20dp">
     <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/img_back"
         android:src="@drawable/icon_back"
         android:layout_alignParentLeft="true"
         android:textColor="@color/white"
         android:scaleType="fitXY"/>
     <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/icon_save"
         android:id="@+id/imgbut_save"
         android:scaleType="fitCenter"
         android:layout_alignParentEnd="true"/>
     <ImageButton
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/icon_visible"
         android:id="@+id/imgbut_visible"
         android:scaleType="fitCenter"
+        android:layout_marginRight="30dp"
 
         android:layout_toLeftOf="@+id/imgbut_save"/>
 

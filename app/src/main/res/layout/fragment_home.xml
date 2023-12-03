@@ -5,12 +5,24 @@
     android:background="@color/Black"
     android:id="@+id/root_view"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <include layout="@layout/toolbar_main"/>
+    <include layout="@layout/toolbar_main"
+        android:id="@+id/toolbar1"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_main"
-        android:visibility="visible">
+        android:layout_below="@+id/toolbar1">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_floating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/icon_plus" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,9 +33,10 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="467dp"
+                android:layout_height="400dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
+                android:scaleType="fitEnd"
                 android:src="@drawable/img_note" />
 
             <TextView
@@ -34,23 +47,11 @@
 
         </LinearLayout>
 
-
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/ryc_notes"
                 android:visibility="visible" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_floating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="65dp"
-            android:backgroundTint="#FF6E40"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_add" />
     </RelativeLayout>
 </RelativeLayout>

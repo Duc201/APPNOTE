@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel> {
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel> implements Filterable {
+
+
 
     public interface IClickListener{
         void onClickItem(Note note);
@@ -30,6 +34,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
 
     IClickListener mIClickListener;
     List<Note> mlistNote;
+    List<Note> mListNoteOld;
     Context mContext;
 
 
@@ -38,6 +43,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
 
         this.mlistNote = mlistNote;
         this.mIClickListener= iClickListener;
+        this.mListNoteOld = mlistNote;
     }
 
     @NonNull
@@ -116,4 +122,36 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
         mlistNote.add(index,note);
         notifyItemInserted(index);
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String strSearch = constraint.toString();
+                if(strSearch.isEmpty()){
+                    mlistNote = mListNoteOld;
+                }else {
+                    List<Note> list = new ArrayList<>();
+                    for(Note note : mListNoteOld){
+                        if(note.getTitle().toLowerCase().contains(strSearch.toLowerCase())){
+                            list.add(note);
+                        }
+                    }
+                    mlistNote = list;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mlistNote;
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+            mlistNote = (List<Note>) results.values;
+            notifyDataSetChanged();;
+            }
+        };
+    }
+
 }

@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,8 +19,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,9 +51,11 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
     List<Note> mlistNote;
     RelativeLayout rootView;
 
-    ImageButton mImageButtonSearch;
+//    ImageButton mImageButtonSearch;
     ImageButton mImageButtonIntroduct;
     NoteAdapter noteAdapter;
+    Toolbar toolbar;
+    SearchView searchView;
 
 
 
@@ -53,11 +63,13 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
+        toolbar = view.findViewById(R.id.toolbar_main);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         mLayoutNotData = view.findViewById(R.id.linear_non);
         mRecyclerView = view.findViewById(R.id.ryc_notes);
         mFloatingActionButton = view.findViewById(R.id.btn_floating);
-        mImageButtonIntroduct = view.findViewById(R.id.imgbut_introduce);
-        mImageButtonSearch = view.findViewById(R.id.imgbut_search);
+        mImageButtonIntroduct = toolbar.findViewById(R.id.imgbut_introduce);
+        searchView = toolbar.findViewById(R.id.imgbut_search);
         rootView = view.findViewById(R.id.root_view);
 
         // Set view nodata or data
@@ -76,8 +88,6 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
 //                showCustomDialog();
                 openDialogIntroduce(Gravity.CENTER);
             }
-
-
         });
 
         mlistNote = NoteDatabase.getInstance(getContext()).noteDAO().getListNote();
@@ -95,8 +105,37 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
         ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerViewItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(mRecyclerView);
 
+        // setSearchView
+        setSearchView();
+
 
         return view;
+    }
+
+    private void setSearchView() {
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                noteAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Áp dụng bộ lọc dữ liệu vào RecyclerView
+                noteAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
+
+    private void openFragmentSearch() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frag_layout,new SearchFragment());
+        fragmentTransaction.addToBackStack("FragmentSearch");
+        fragmentTransaction.commit();
     }
 
 
@@ -178,7 +217,7 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
                 NoteDatabase.getInstance(getContext()).noteDAO().deleteNote(noteDelete);
 
                 checkInitData();
-                Snackbar snackbar = Snackbar.make(rootView,nameNoteDelete+"remover!", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(rootView,nameNoteDelete+" remove!", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -194,4 +233,6 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
 
             }
     }
+
+
 }
