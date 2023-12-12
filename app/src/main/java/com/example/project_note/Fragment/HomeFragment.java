@@ -15,12 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 
-
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +57,7 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
     NoteAdapter noteAdapter;
     Toolbar toolbar;
     SearchView searchView;
+    Button mBtnSearch;
 
 
 
@@ -63,6 +65,7 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
+
         toolbar = view.findViewById(R.id.toolbar_main);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         mLayoutNotData = view.findViewById(R.id.linear_non);
@@ -71,6 +74,13 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
         mImageButtonIntroduct = toolbar.findViewById(R.id.imgbut_introduce);
         searchView = toolbar.findViewById(R.id.imgbut_search);
         rootView = view.findViewById(R.id.root_view);
+        mBtnSearch = view.findViewById(R.id.btnSearch);
+//        mBtnSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openFragmentSearch();
+//            }
+//        });
 
         // Set view nodata or data
         checkInitData();
@@ -108,35 +118,56 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
         // setSearchView
         setSearchView();
 
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                if (searchView != null && !searchView.isIconified()) {
+                    // Nếu SearchView đang mở, thu nhỏ nó thay vì thoát ứng dụng
+                    searchView.setIconified(true);
+                } else {
+                    // Nếu không, thực hiện hành động mặc định khi nhấn nút Back
+                    requireActivity().finish();
+                }
+
+            }
+        });
+
 
         return view;
     }
 
+    private void initial() {
+    }
+
     private void setSearchView() {
-        searchView.setMaxWidth(Integer.MAX_VALUE);
+//        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                // Khi người dùng nhấn nút tìm kiếm trên bàn phím
+                // Áp dụng bộ lọc dữ liệu vào Adapter để lọc dữ liệu dựa trên truy vấn tìm kiếm
                 noteAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Áp dụng bộ lọc dữ liệu vào RecyclerView
+                // Khi giá trị của ô tìm kiếm thay đổi
+                // Áp dụng bộ lọc dữ liệu vào Adapter để ngay lập tức lọc dữ liệu dựa trên văn bản mới nhập
                 noteAdapter.getFilter().filter(newText);
                 return false;
             }
         });
     }
 
-    private void openFragmentSearch() {
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frag_layout,new SearchFragment());
-        fragmentTransaction.addToBackStack("FragmentSearch");
-        fragmentTransaction.commit();
-    }
+//    private void openFragmentSearch() {
+//        FragmentManager fragmentManager = getParentFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.frag_layout,new SearchFragment());
+//        fragmentTransaction.addToBackStack("FragmentSearch");
+//        fragmentTransaction.commit();
+//    }
 
 
     private void checkInitData(){
@@ -172,18 +203,20 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
         else {
             dialog.setCancelable(false);
         }
+
         dialog.show();
 
     }
 
 
     private void openFragmentVisible(Note note) {
-        VisibleItemFragment visibleItemFragment = new VisibleItemFragment();
+
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("note",  note);
-        visibleItemFragment.setArguments(bundle);
+        getParentFragmentManager().setFragmentResult("dataFromHome",bundle);
 
+        VisibleItemFragment visibleItemFragment = new VisibleItemFragment();
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frag_layout,visibleItemFragment );
@@ -206,9 +239,11 @@ public class HomeFragment extends Fragment implements ItemTouchHelperListener {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder) {
             if(viewHolder instanceof NoteAdapter.NoteViewHodel){
+                // Lấy title của một Note
                 final String nameNoteDelete = mlistNote.get(viewHolder.getAdapterPosition()).getTitle();
 
                 final Note noteDelete = mlistNote.get(viewHolder.getAdapterPosition());
+
                 final int indexDelte = viewHolder.getAdapterPosition();
 
                 //remove item

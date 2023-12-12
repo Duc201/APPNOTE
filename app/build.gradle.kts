@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.fragment:fragment:1.3.5")
+
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")

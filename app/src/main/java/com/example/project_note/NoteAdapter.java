@@ -59,6 +59,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
 
         holder.mTxtTitle.setText(note.getTitle().toString());
 
+
         // Creat ColorItem
         int colorIndex = position % colorList.size();
         int colorResId = colorList.get(colorIndex);
@@ -104,14 +105,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
             mTxtTitle = itemView.findViewById(R.id.edt_title_item);
             mCardView = itemView.findViewById(R.id.cardview_note);
             mLayoutForceGround = itemView.findViewById(R.id.layout_forceground);
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if(mIClickListener!=null){
-//                        mIClickListener.onClickItem();
-//                    }
-//                }
-//            });
         }
     }
     public void removeItem(int index){
@@ -126,12 +119,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
     @Override
     public Filter getFilter() {
         return new Filter() {
+
+            // Thực hiện truy vấn tìm kiếm
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String strSearch = constraint.toString();
+                // Nếu chưa nhập gì
                 if(strSearch.isEmpty()){
                     mlistNote = mListNoteOld;
-                }else {
+                }
+                // Nếu nhập rồi
+                else {
                     List<Note> list = new ArrayList<>();
                     for(Note note : mListNoteOld){
                         if(note.getTitle().toLowerCase().contains(strSearch.toLowerCase())){
@@ -140,15 +138,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHodel>
                     }
                     mlistNote = list;
                 }
+                // Tạo một filterResults là lưu kết quả
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = mlistNote;
 
                 return filterResults;
             }
 
+            // Cập nhật giao diện người dùng với kết quả đã lọc
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
             mlistNote = (List<Note>) results.values;
+            // Thông báo adapter đã thay đổi
             notifyDataSetChanged();;
             }
         };

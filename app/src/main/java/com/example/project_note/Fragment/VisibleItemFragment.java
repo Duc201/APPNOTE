@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.project_note.DataBase.Note;
@@ -35,6 +36,7 @@ public class VisibleItemFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_visible_item,container,false);
+
         mTxtDetail = view.findViewById(R.id.txt_detail_visible);
         mTxtTitle = view.findViewById(R.id.txt_title_visible);
         mImageButtonBack = view.findViewById(R.id.imgbut_back);
@@ -58,49 +60,51 @@ public class VisibleItemFragment extends Fragment {
         });
 
 
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Note note = (Note) bundle.getSerializable("note");
-            if (note != null) {
-//                 Hiển thị dữ liệu trong TextViews
-                mTxtDetail.setText(note.getDetail());
-                mTxtTitle.setText(note.getTitle());
-                id = note.getId();
-                Log.d("AAA","Vào Sau");
-
+        getParentFragmentManager().setFragmentResultListener("dataFromEdit", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                Note note = (Note) result.getSerializable("note5");
+                if(note != null) {
+                    mTxtDetail.setText(note.getDetail());
+                    mTxtTitle.setText(note.getTitle());
+                    id = note.getId();
+                }
             }
-            Note note2 = (Note) bundle.getSerializable("note5");
-            if (note2 != null) {
-//                 Hiển thị dữ liệu trong TextViews
-                mTxtDetail.setText(note2.getDetail());
-                mTxtTitle.setText(note2.getTitle());
-                id = note2.getId();
-                Log.d("AAA","Vào Sau");
-
+        });
+        getParentFragmentManager().setFragmentResultListener("dataFromHome", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                Note note = (Note) result.getSerializable("note");
+                if(note != null) {
+                    mTxtDetail.setText(note.getDetail());
+                    mTxtTitle.setText(note.getTitle());
+                    id = note.getId();
+                }
             }
+        });
 
-
-
-        }
-
-//        mTxtTitle.setText(note2.getTitle().toString());
-//        mTxtDetail.setText(note2.getDetail().toString());
-
-//            note2 = NoteDatabase.getInstance(getContext()).noteDAO().getNote(id);
-//            mTxtDetail.setText(note2.getDetail());
-//            mTxtTitle.setText(note2.getTitle());
+        getParentFragmentManager().setFragmentResultListener("dataFromSearch", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                Note note = (Note) result.getSerializable("note9");
+                if(note != null) {
+                    mTxtDetail.setText(note.getDetail());
+                    mTxtTitle.setText(note.getTitle());
+                    id = note.getId();
+                }
+            }
+        });
         return view;
     }
 
     private void openFragmentEdit(Note note, int id) {
+
         EditNoteFragment editNoteFragment = new EditNoteFragment();
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("note1",  note);
         bundle.putInt("KeyInt",id);
-        editNoteFragment.setArguments(bundle);
-        editNoteFragment.setTargetFragment(this, 123);
+        getParentFragmentManager().setFragmentResult("dataFromVisible",bundle);
 
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -108,6 +112,7 @@ public class VisibleItemFragment extends Fragment {
         fragmentTransaction.addToBackStack(null); // Nếu bạn muốn thêm vào back stack
         fragmentTransaction.commit();
     }
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.project_note;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageButton;
+import android.window.OnBackInvokedDispatcher;
 
 import com.example.project_note.DataBase.Note;
 import com.example.project_note.Fragment.HomeFragment;
@@ -37,5 +39,6 @@ public class MainActivity extends AppCompatActivity{
         fragmentTransaction.commit();
 
     }
+
 
 }
