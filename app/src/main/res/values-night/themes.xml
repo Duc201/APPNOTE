@@ -7,6 +7,7 @@
         <!-- Chỉ định màu chữ chung cho tất cả các layout -->
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/Gray</item>
+        <item name ="appBarLayoutStyle">@color/Black</item>
         <item name = "android:fontFamily">@font/nunitoregular</item>
     </style>
 </resources>

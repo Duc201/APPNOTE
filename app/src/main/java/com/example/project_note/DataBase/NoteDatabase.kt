@@ -4,14 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [Note::class, Image::class], version = 1)
+//@TypeConverters(Converters::class)
+
 abstract class NoteDatabase : RoomDatabase() {
     abstract fun noteDAO(): NoteDAO
+    abstract fun ImageDAO(): ImageDAO
+
 
     companion object {
-        private const val DATABASE_NAME = "user.db"
-        private lateinit var instance: NoteDatabase
+        private val DATABASE_NAME = "user.db"
+        private var instance: NoteDatabase? = null
+
         @Synchronized
         fun getInstance(context: Context): NoteDatabase {
             if (instance == null) {
@@ -23,7 +29,7 @@ abstract class NoteDatabase : RoomDatabase() {
                     .allowMainThreadQueries()
                     .build()
             }
-            return instance
+            return instance!!
         }
     }
 }

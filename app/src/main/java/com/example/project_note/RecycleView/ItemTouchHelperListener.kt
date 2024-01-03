@@ -1,4 +1,4 @@
-package com.example.project_note
+package com.example.project_note.RecycleView
 
 import androidx.recyclerview.widget.RecyclerView
 

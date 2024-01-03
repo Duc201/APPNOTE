@@ -1,13 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="15dp">
-    <include layout="@layout/toolbar_detail_edit"/>
+    android:layout_margin="10dp">
+    <Toolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/img_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/imagebutton_background"
+                android:padding="4dp"
+                android:src="@drawable/icon_back"
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="13dp"
+                android:src="@drawable/icon_save"
+                android:id="@+id/imgbut_save"
+                android:scaleType="fitCenter"
+                android:background="@drawable/imagebutton_background"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="1"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="13dp"
+                android:src="@drawable/icon_visible"
+                android:id="@+id/imgbut_visible"
+                android:scaleType="fitCenter"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/imagebutton_background"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/img_back"
+                app:layout_constraintRight_toLeftOf="@+id/imgbut_save"
+                app:layout_constraintHorizontal_bias="1"
+               />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </Toolbar>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/rcy_photos"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rcy_photos"
         android:id="@+id/edt_title"
         android:hint="Title"
         android:textSize="40sp"
@@ -15,11 +79,30 @@
         android:layout_marginBottom="40dp"
         />
     <EditText
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_title"
         android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edt_detail"
         android:hint="Type something......"
         android:background="@null"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#5C5555"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent">
+    <ImageButton
+        android:layout_gravity="center"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imgbut_addpic"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_add_picture"/>
 
 </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

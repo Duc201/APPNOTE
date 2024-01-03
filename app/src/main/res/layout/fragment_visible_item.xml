@@ -2,22 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_margin="15dp">
-    <include layout="@layout/toolbar_detail_visible1"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_title_visible"
-        android:hint="Title"
-        android:textSize="40sp"
-        android:layout_marginBottom="40dp"/>
-    <TextView
-        android:textSize="14sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_detail_visible"
-        android:hint="Type something......"/>
+
+        <Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:id="@+id/toolbar_fragVisi">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_back"
+                    android:padding="3dp"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/white"
+                    android:id="@+id/imgbut_back"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/imagebutton_background"
+
+                    />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_edit"
+                    android:id="@+id/imgbut_edit"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/imagebutton_background"
+                    android:padding="13dp"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+
+        </Toolbar>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            android:id="@+id/rcy_photos"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_title_visible"
+            android:hint="Title"
+            android:textSize="40sp"
+            android:layout_marginBottom="40dp"/>
+        <TextView
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_detail_visible"
+            android:hint="Type something......"/>
+
 
 
 </LinearLayout>
