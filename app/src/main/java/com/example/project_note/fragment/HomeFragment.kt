@@ -1,8 +1,13 @@
 package com.example.project_note.fragment
 
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -11,17 +16,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
-import android.widget.Filter
-import android.widget.Filterable
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.project_note.Activity.LoginActivity
 import com.example.project_note.DataBase.Note
 import com.example.project_note.R
 import com.example.project_note.RecycleView.IClickListener
@@ -29,10 +35,13 @@ import com.example.project_note.RecycleView.ItemTouchHelperListener
 import com.example.project_note.RecycleView.NoteAdapter
 import com.example.project_note.RecycleView.NoteAdapter.NoteViewHodel
 import com.example.project_note.RecycleView.RecyclerViewItemTouchHelper
+import com.example.project_note.ViewModal.AuthViewModel
 import com.example.project_note.ViewModal.ViewModalImage
 import com.example.project_note.ViewModal.ViewModalNote
 import com.example.project_note.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.squareup.picasso.Picasso
 
 
 class HomeFragment : Fragment(), ItemTouchHelperListener {
@@ -40,9 +49,18 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
     private lateinit var noteAdapter: NoteAdapter
     private lateinit var mViewModalNote: ViewModalNote
     lateinit var mViewModalImage: ViewModalImage
+    private lateinit var mViewModelAuth : AuthViewModel
+
 
     private var binding_Home: FragmentHomeBinding?=null
     private val binding get() = binding_Home!!
+    private lateinit var sharedpreferences: SharedPreferences
+
+    companion object {
+        const val SHARED_PREFS = "shared_prefs"
+        const val EMAIL_KEY = "email_key"
+        const val PASSWORD_KEY = "password_key"
+    }
 
 
     override fun onCreateView(
@@ -53,7 +71,10 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
         binding_Home = FragmentHomeBinding.inflate(inflater,container,false)
         mViewModalNote = ViewModelProvider(requireActivity()).get(ViewModalNote::class.java)
         mViewModalImage = ViewModelProvider(requireActivity()).get(ViewModalImage::class.java)
+        mViewModelAuth = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
 
+        sharedpreferences = requireActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
+        onClickNavigationDrawer()
 
         setupRecyclerView()
         mViewModalNote.mListNote.observe(viewLifecycleOwner){
@@ -62,17 +83,90 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
             setSearchView()
             noteAdapter.submitList(it?.toMutableList())
         }
+        mViewModelAuth.getInformationUser(requireContext())
+        mViewModelAuth.userResponse.observe(viewLifecycleOwner){
+            val headerView = binding_Home?.navigationView?.getHeaderView(0)
+            val textViewUsername = headerView?.findViewById<TextView>(R.id.txt_name)
+            val imageView = headerView?.findViewById<ImageView>(R.id.img_user)
+            val textViewEmail = headerView?.findViewById<TextView>(R.id.txt_email)
+           textViewUsername?.setText(it.name)
+            textViewEmail?.setText(it.email)
+            Picasso.with(context)
+                .load(it.image)
+                .placeholder(R.drawable.icon_person)
+                .error(R.drawable.icon_person)
+                .into(imageView);
+        }
 
         // swip delete item
         val simpleCallback: ItemTouchHelper.SimpleCallback = RecyclerViewItemTouchHelper(0, ItemTouchHelper.LEFT, this)
         ItemTouchHelper(simpleCallback).attachToRecyclerView( binding_Home?.rycNotes)
 
         openActionButton()
-//        setSearchView()
+        binding_Home!!.navigationView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_changepass -> {
+                    openFragmentChangePassword()
+                    binding.dlLayout.closeDrawer(GravityCompat.START)
+
+                    true
+                }
+                R.id.nav_logout -> {
+                    val editor = sharedpreferences.edit()
+                    editor.clear()
+                    editor.apply()
+                    FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(requireActivity(),LoginActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                    true
+                }
+                R.id.nav_inforAccount ->{
+                    openFragmentInformationAccount()
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+
+
+        }
+
+
         overrideBack()
         mViewModalImage.onClearListImageLiveData()
 
         return binding.root
+    }
+
+    private fun onClickNavigationDrawer() {
+//        val window: Window = requireActivity().window
+
+        binding.dlLayout.addDrawerListener(object : DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                val angle = slideOffset * 180
+                binding.btnDrawer.setRotation(angle)
+                binding.navigationView.bringToFront()
+                binding.navigationView.requestFocus()
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                binding.btnDrawer.setRotation(90f)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    window.statusBarColor = getColor(R.color.transparent)
+                }
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                binding.btnDrawer.setRotation(0f)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    window.statusBarColor = getColor(R.color.blue_gradient_end)
+                }
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {}
+        })
     }
 
 
@@ -84,8 +178,6 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
             }
         })
 
-//        var layoutAnimationControll : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(requireContext(),R.anim.layout_anmation_left_to_right)
-//        binding_Home?.rycNotes?.layoutAnimation = layoutAnimationControll
         binding_Home?.rycNotes?.adapter = noteAdapter
     }
 
@@ -93,20 +185,26 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
     private fun openActionButton() {
         binding_Home!!.btnFloating.setOnClickListener { openFragmentEdit() }
         binding_Home!!.imgbutIntroduce.setOnClickListener({ openDialogIntroduce(Gravity.CENTER) })
-    }
+        binding.btnDrawer.setOnClickListener { v ->
+            if (binding.dlLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.dlLayout.closeDrawer(GravityCompat.START)
+            } else {
+                binding.dlLayout.openDrawer(GravityCompat.START)
+                binding.navigationView.bringToFront()
+                binding.navigationView.requestFocus()
+            }
+        }
 
+    }
 
     private fun setSearchView() {
         binding_Home!!.imgbutSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 mViewModalNote.onFilterChange(query)
-//Log.d("searView","1")
                 return false
             }
             override fun onQueryTextChange(newText: String): Boolean {
                 mViewModalNote.onFilterChange(newText)
-//                Log.d("searView","2")
-
                 return false
             }
         })
@@ -172,6 +270,12 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
             .addToBackStack(null)
             .commit()
     }
+    private fun openFragmentInformationAccount() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frag_layout, UpdateUserFragment::class.java,null)
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun openFragmentEdit() {
         val fragment = EditFragment()
@@ -180,6 +284,14 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
         fragment.arguments = bundle
         parentFragmentManager.beginTransaction()
             .replace(R.id.frag_layout, fragment,null)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun openFragmentChangePassword(){
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frag_layout, ChangePasswordFragment::class.java,null)
             .addToBackStack(null)
             .commit()
     }

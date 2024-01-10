@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:layout_margin="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/txt_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="40dp"
+        android:text="LOGIN"
+        android:textStyle="bold"
+        android:textSize="35sp" />
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:hint="Email"
+            android:id="@+id/txt_email"
+            android:textSize="20sp"
+            android:background="@drawable/custom_edit_text_cut"
+            android:drawableStart="@drawable/custom_mail_icon"
+            android:drawablePadding="12dp"
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:hint="Passsword"
+            android:id="@+id/txt_pass"
+            android:textSize="20sp"
+            android:background="@drawable/custom_edit_text_cut"
+            android:drawableStart="@drawable/custom_key_icon"
+            android:drawablePadding="12dp"
+            android:inputType="textPassword"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remember me"
+            android:id="@+id/checkbox"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_login"
+            android:textSize="20sp"
+            android:text="Log in"
+            android:background="@drawable/imagebutton_background"
+
+            android:padding="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:id="@+id/txt_resetpass"
+            android:textColor="@drawable/custom_textview"
+            android:text="FORGOT PASSWORD ?"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:id="@+id/txt_or"
+            android:text="OR"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/img_facebook"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/img_google"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_facebook"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/img_facebook"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_google"
+                android:id="@+id/img_google"
+                android:layout_weight="1"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:text="New User?"/>
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/txt_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:textColor="@drawable/custom_textview_attend"
+            android:text="Register User ?" />
+
+    </LinearLayout>
+
+
+
+    </LinearLayout>

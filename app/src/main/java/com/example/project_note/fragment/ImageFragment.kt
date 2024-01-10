@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.project_note.DataBase.Image
 import com.example.project_note.R
 import com.example.project_note.ViewModal.ViewModalImage
 import com.example.project_note.databinding.FragmentImagedetailBinding
@@ -24,8 +25,6 @@ class ImageFragment : Fragment() {
     lateinit var binding_Image: FragmentImagedetailBinding
     private val binding get() = binding_Image!!
     private lateinit var mViewModalImage: ViewModalImage
-
-    lateinit var mImage:com.example.project_note.DataBase.Image
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +43,6 @@ class ImageFragment : Fragment() {
         mViewModalImage.selectImage.observe(viewLifecycleOwner){
             val bitmap = BitmapFactory.decodeFile(it.path)
             binding.imgView.setImageBitmap(bitmap)
-            mImage = it
         }
         setupButton()
         return binding.root
@@ -86,19 +84,8 @@ class ImageFragment : Fragment() {
         titile.setText("Do You Delete Image ?")
 
         btnYes.setOnClickListener {
-
-            // Du TH nao cung se xoa phan tu Image trong listViewModal
-            mViewModalImage.deleImageViewModel(mImage)
-            // TH Image được lưa trong DB
-            if(mImage.idImage != 0){
-               mViewModalImage.addImageToListDelete(mImage)
-            }
-            // TH Image chưa được lưu trong DB
-            if(mImage.idImage == 0) {
-                mViewModalImage.deleteInternalStorge(mImage)
-            }
+            mViewModalImage.deleImage()
             dialog.dismiss()
-
             parentFragmentManager.popBackStack()
         }
         btnNo.setOnClickListener { dialog.dismiss() }

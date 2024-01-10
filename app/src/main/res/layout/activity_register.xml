@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Toolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar2"
+        android:layout_height="80dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/imga_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/imagebutton_background"
+                android:padding="15dp"
+                android:src="@drawable/icon_back"
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </Toolbar>
+    <TextView
+        android:id="@+id/txt_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="40dp"
+        android:text="REGISTER"
+        android:textStyle="bold"
+        android:textSize="35sp" />
+
+    <EditText
+        android:id="@+id/txt_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/custom_edit_text_cut"
+        android:drawableStart="@drawable/custom_mail_icon"
+        android:drawablePadding="12dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="12dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="15dp"
+        android:textSize="20sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:hint="Passsword"
+        android:id="@+id/txt_pass"
+        android:textSize="20sp"
+        android:background="@drawable/custom_edit_text_cut"
+        android:drawableStart="@drawable/custom_key_icon"
+        android:drawablePadding="12dp"
+        android:inputType="textPassword"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:hint="Confirm Passsword"
+        android:id="@+id/txt_confpass"
+        android:textSize="20sp"
+        android:background="@drawable/custom_edit_text_cut"
+        android:drawableStart="@drawable/custom_key_icon"
+        android:drawablePadding="12dp"
+        android:inputType="textPassword"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_register"
+        android:textSize="20sp"
+        android:text="SIGN UP"
+        android:background="@drawable/imagebutton_background"
+        android:padding="15dp"/>
+</LinearLayout>

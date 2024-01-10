@@ -4,6 +4,7 @@ package com.example.project_note.fragment
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -50,6 +51,8 @@ class EditFragment : Fragment() {
     lateinit var mViewModalNote: ViewModalNote
     lateinit var mViewModalImage: ViewModalImage
     lateinit var mImageAdapter: ImageAdapter
+    lateinit var mProgressDialog : ProgressDialog
+
 
     var idNote = -1
 
@@ -65,7 +68,7 @@ class EditFragment : Fragment() {
         binding_edit = FragmentEditNoteBinding.inflate(inflater, container, false)
         mViewModalNote = ViewModelProvider(requireActivity()).get(ViewModalNote::class.java)
         mViewModalImage = ViewModelProvider(requireActivity()).get(ViewModalImage::class.java)
-        
+        mProgressDialog = ProgressDialog(requireContext())
         setupRecycleView()
         checkAddorEdit()
         setupButtons()
@@ -84,13 +87,6 @@ class EditFragment : Fragment() {
 
     }
 
-    private fun openImageFragment() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.frag_layout, ImageFragment::class.java,null)
-            .addToBackStack(null)
-            .commit()
-    }
-
     private fun checkAddorEdit() {
 
         val bundle = arguments ?: Bundle()
@@ -101,7 +97,6 @@ class EditFragment : Fragment() {
             Log.d("edtnote", " creat new note")
             binding_edit.imgbutVisible.visibility = View.GONE
             mViewModalImage.mListImage.observe(viewLifecycleOwner){
-                Log.d("1-ManhDuc",it.toString())
                 mImageAdapter.submitList(it.toMutableList())
             }
 
@@ -118,7 +113,6 @@ class EditFragment : Fragment() {
         binding_edit.edtTitle.setText(note.title)
         binding_edit.edtDetail.setText(note.detail)
         idNote = note.idNote
-//        var listPath: MutableList<String> = mutableListOf()
         mViewModalImage.mListImage.observe(viewLifecycleOwner){
             mImageAdapter.submitList(it.toMutableList())
         }
@@ -131,7 +125,7 @@ class EditFragment : Fragment() {
         binding_edit.imgbutVisible.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-        binding_edit.imgbutAddpic.setOnClickListener {
+        binding_edit.miscellaneous.imgbutAddpic.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 getImage()
             }
@@ -159,6 +153,7 @@ class EditFragment : Fragment() {
     }
 
     private fun getImage() {
+
         // open glarry
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
@@ -166,6 +161,7 @@ class EditFragment : Fragment() {
     }
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+
             // Xử lý kết quả trả về từ thư viện ảnh
             val imagedata: Intent? = result.data
 
@@ -303,7 +299,12 @@ class EditFragment : Fragment() {
             }
         }
 
-
+    private fun openImageFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frag_layout, ImageFragment::class.java,null)
+            .addToBackStack(null)
+            .commit()
+    }
         private fun overrideback() {
             requireActivity().onBackPressedDispatcher
                 .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {

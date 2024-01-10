@@ -17,7 +17,12 @@ class NoteRepository(private val noteDao: NoteDAO ) {
                         emitter.onSuccess(noteDao.getListNote())
                 }
     }
-     fun insert(note:Note) : Completable = noteDao.insertNote(note)
+     fun insert(note:Note) : Completable{
+         return Completable.create {emitter->
+             noteDao.insertNote(note)
+             emitter.onComplete()
+         }
+     }
      fun delete(note:Note) : Completable = noteDao.deleteNote(note)
      fun update(note:Note) : Completable = noteDao.updateNote(note)
 

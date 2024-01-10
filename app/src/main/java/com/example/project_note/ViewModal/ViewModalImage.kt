@@ -66,8 +66,8 @@ class ViewModalImage(application: Application) : AndroidViewModel(application){
     }
     public fun InserImagetoDB(){
         for(image in _mListImage.value!!){
-            if(image.idImage == 0)
-            addImage(image)
+             if(image.idImage == 0)
+             addImage(image)
         }
     }
 
@@ -81,10 +81,22 @@ class ViewModalImage(application: Application) : AndroidViewModel(application){
         )
     }
 
-    fun deleImageViewModel(image : Image){
+    fun deleImage(){
+
+        // Xoa khoi ViewModel
         var mlist = _mListImage.value
-        mlist?.remove(image)
+        mlist?.remove(_selectedImage.value)
         _mListImage.value = mlist
+
+        // Neu anh da luu save db -> them vao 1 list -> sau khi save thi se xoa han trong internal va db
+        if(_selectedImage.value?.idImage != 0){
+            addImageToListDelete(_selectedImage.value!!)
+        }
+
+        // TH Image chưa được lưu trong DB -> xoa trong internal storage
+        if(_selectedImage.value?.idImage == 0) {
+           deleteInternalStorge(_selectedImage.value!!)
+        }
 
     }
 

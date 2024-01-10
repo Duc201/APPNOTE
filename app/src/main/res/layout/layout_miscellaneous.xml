@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:background="@drawable/custom_miscellaneous"
+    android:layout_gravity="bottom"
+    android:layout_height="40dp">
     <ImageButton
         android:padding="10dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:id="@+id/imgbut_addpic"
         android:scaleType="fitXY"
+        android:layout_gravity="center"
+        android:background="@drawable/imagebutton_background"
         android:src="@drawable/icon_add_picture"/>
 </LinearLayout>

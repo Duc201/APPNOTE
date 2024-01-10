@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+    android:layout_marginTop="150dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Information Account"
+        android:layout_gravity="center"
+        android:textSize="34sp"
+        />
+
+    <ImageView
+        android:id="@+id/image_person"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/icon_person_large"
+        android:layout_gravity="center"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:hint="Name"
+        android:id="@+id/txt_name"
+        android:textSize="20sp"
+        android:background="@drawable/custom_edit_text_cut"
+        android:drawablePadding="12dp"
+        android:inputType="textEmailAddress"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:hint="Email"
+        android:id="@+id/txt_email"
+        android:textSize="20sp"
+        android:background="@drawable/custom_edit_text_cut"
+        android:drawablePadding="12dp"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_save"
+        android:textSize="20sp"
+        android:text="Save and Back"
+        android:layout_gravity="center"
+        android:background="@drawable/imagebutton_background"
+
+        android:padding="15dp"/>
+
+
+
+</LinearLayout>

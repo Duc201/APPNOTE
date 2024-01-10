@@ -1,121 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root_view"
+    android:id="@+id/dl_layout"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:openDrawer="end"
+    tools:context=".Activity.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/root_view">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/appBar">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:layout_marginRight="20dp"
+                        android:padding="12.5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_drawer"
+                        android:id="@+id/btn_drawer"
+                        android:visibility="visible"
+                        android:layout_alignParentStart="true" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/nunitoregular"
+                        android:text="Notes"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:layout_toRightOf="@id/btn_drawer"/>
+
+                    <ImageButton
+                        android:layout_marginRight="20dp"
+                        android:padding="12.5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_introduce"
+                        android:id="@+id/imgbut_introduce"
+                        android:visibility="visible"
+                        android:background="@drawable/imagebutton_background"
+                        android:layout_alignParentEnd="true"/>
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/imgbut_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="33dp"
+                        android:layout_toLeftOf="@+id/imgbut_introduce"
+                        android:background="@drawable/imagebutton_background"
+                        />
+
+                </RelativeLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBar"
+            android:id="@+id/linear_non">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:scaleType="fitEnd"
+                android:src="@drawable/img_note" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Creat your first note ! "
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <!--Phải dùng padding bottom để không bị mất item
+        https://stackoverflow.com/questions/32742724/recyclerview-is-cutting-off-the-last-item
+        -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="100dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            android:id="@+id/ryc_notes"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBar" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_floating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/icon_plus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.873"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--Tại sao khi dùng appBarLayout thì recycleView
  marginbottom = size của appBar-->
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/appBar">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="5dp"
-                    android:fontFamily="@font/nunitoregular"
-                    android:text="Notes"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:layout_marginRight="20dp"
-                    android:padding="13dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/info_outline"
-                    android:id="@+id/imgbut_introduce"
-                    android:visibility="visible"
-                    android:background="@drawable/imagebutton_background"
-                    android:layout_alignParentEnd="true"/>
-
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/imgbut_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="33dp"
-                    android:layout_toLeftOf="@+id/imgbut_introduce"
-                    android:background="@drawable/imagebutton_background"
-                    />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:id="@+id/navigationView"
+        app:headerLayout="@layout/layout_header_nav"
+        app:menu="@menu/menu_nav"
+        />
 
 
-            </RelativeLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar"
-        android:id="@+id/linear_non">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="400dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:scaleType="fitEnd"
-            android:src="@drawable/img_note" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Creat your first note ! "
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
-
-    <!--Phải dùng padding bottom để không bị mất item
-    https://stackoverflow.com/questions/32742724/recyclerview-is-cutting-off-the-last-item
-    -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingBottom="100dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
-        android:id="@+id/ryc_notes"
-        android:visibility="visible"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_floating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:src="@drawable/icon_plus"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.873"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

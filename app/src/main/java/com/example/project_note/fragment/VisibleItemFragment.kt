@@ -1,5 +1,6 @@
 package com.example.project_note.fragment
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ class VisibleItemFragment : Fragment() {
     private lateinit var mViewModalImage: ViewModalImage
 
     private lateinit var mImageAdapter : ImageAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,9 +96,7 @@ class VisibleItemFragment : Fragment() {
         mViewModalImage.getListImage(it.idNote)
         mViewModalImage.mListImage.observe(viewLifecycleOwner){
             mImageAdapter.submitList(it)
-//            mViewModalImage.saveOldState(it)
         }
-
     }
 
     private fun backPressed(){
