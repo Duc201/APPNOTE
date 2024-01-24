@@ -35,6 +35,7 @@ class VisibleItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        Log.d("Visible","Sang Thang Visible rồi")
         binding_Visible = FragmentVisibleItemBinding.inflate(inflater, container,false)
         mViewModalNote = ViewModelProvider(requireActivity()).get(ViewModalNote::class.java)
         mViewModalImage = ViewModelProvider(requireActivity()).get(ViewModalImage::class.java)
@@ -61,7 +62,7 @@ class VisibleItemFragment : Fragment() {
                 openImageFragment()
             }
 
-        })
+        },requireContext())
 
         binding_Visible.rcyPhotos.adapter = mImageAdapter
     }

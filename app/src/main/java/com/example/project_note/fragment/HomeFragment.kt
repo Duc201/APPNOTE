@@ -133,7 +133,6 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
 
         }
 
-
         overrideBack()
         mViewModalImage.onClearListImageLiveData()
 
@@ -278,7 +277,7 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
     }
 
     private fun openFragmentEdit() {
-        val fragment = EditFragment()
+        val fragment = AddFragment()
         val bundle = Bundle()
         bundle.putString("HometoEdit1","Anh")
         fragment.arguments = bundle
@@ -319,10 +318,13 @@ class HomeFragment : Fragment(), ItemTouchHelperListener {
                         if(undoClicked == false) {
                             Log.d("Swip", "Xóa trong SQL ")
 
-
-                            mViewModalImage.deleteImageInlistInDB()
+                            mViewModalImage.deleteImageInlist()
 
                             mViewModalNote.deleteNote(noteDelete)
+
+                            mViewModalNote.DeleteNoteToRealTime(noteDelete)
+
+
 
                             mViewModalImage.onClearListImageLiveData()
 

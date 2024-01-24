@@ -4,18 +4,26 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.project_note.DataBase.User
+import com.example.project_note.Repository.AuthResponsitory
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class AuthViewModel : ViewModel() {
+
+    private var responsive : AuthResponsitory = AuthResponsitory()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private val _userResponse = MutableLiveData<User>()
     public val userResponse: LiveData<User> get() = _userResponse
@@ -23,6 +31,7 @@ class AuthViewModel : ViewModel() {
     public val checkreplacepass: LiveData<Boolean> get() = _checkreplacepass
 
     private var mProgressDialog: ProgressDialog? = null
+
 
     public fun updateUri(uri : Uri){
         _userResponse.value?.image=uri.toString()
@@ -100,15 +109,31 @@ fun getInformationUser(context: Context){
                         val verification = FirebaseAuth.getInstance().currentUser?.isEmailVerified
                         if (verification == true) {
                             _userResponse.value = User(email, pass)
+                            creatPathUser(User(email,pass))
                             mProgressDialog!!.dismiss()
-                        } else
+                        } else {
+                            mProgressDialog!!.dismiss()
                             showAlertDialogVerify(context, email)
+                        }
                     } else {
-                        Toast.makeText(context, "Login Fall: $it", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Mật khẩu chưa đúng", Toast.LENGTH_SHORT).show()
+                        mProgressDialog!!.dismiss()
                     }
                 }
 
         }
+
+    fun creatPathUser(user: User){
+            compositeDisposable.add(
+                responsive.creatPathUser(user)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { Log.d("AAA", "Update dataPasth User thành công") },
+                        { throwable -> Log.e("AAA", "Insert error: ${throwable.message}") }
+                    )
+            )
+    }
     fun register(context: Context, email: String, pass: String){
         Firebase.auth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener {
             if (it.isSuccessful) {
@@ -124,6 +149,8 @@ fun getInformationUser(context: Context){
             }
         }
     }
+
+
     fun sendPassordReset(context: Context,email: String){
         Firebase.auth.sendPasswordResetEmail(email)
             .addOnCompleteListener {

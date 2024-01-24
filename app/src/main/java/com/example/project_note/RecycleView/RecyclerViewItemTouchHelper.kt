@@ -32,6 +32,7 @@ class RecyclerViewItemTouchHelper(dragDirs: Int, swipeDirs: Int, private val mli
         }
     }
 
+
     override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val foreGroundView: View = (viewHolder as NoteViewHodel).binding.layoutForceground
 

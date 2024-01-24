@@ -1,6 +1,5 @@
 package com.example.project_note.fragment
 
-
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
@@ -31,7 +30,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.project_note.DataBase.Image
 import com.example.project_note.DataBase.Note
-import com.example.project_note.DataBase.NoteDatabase
 import com.example.project_note.R
 import com.example.project_note.RecycleView.IClickListener1
 import com.example.project_note.RecycleView.ImageAdapter
@@ -44,8 +42,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class EditFragment : Fragment() {
-
+class AddFragment : Fragment() {
     lateinit var binding_edit: FragmentEditNoteBinding
     private val binding get() = binding_edit
     lateinit var mViewModalNote: ViewModalNote
@@ -53,10 +50,7 @@ class EditFragment : Fragment() {
     lateinit var mImageAdapter: ImageAdapter
     lateinit var mProgressDialog : ProgressDialog
 
-
-    var idNote = -1
-
-    var PERMISSIONS = arrayOf(
+    val PERMISSIONS = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
@@ -64,60 +58,35 @@ class EditFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding_edit = FragmentEditNoteBinding.inflate(inflater, container, false)
         mViewModalNote = ViewModelProvider(requireActivity()).get(ViewModalNote::class.java)
         mViewModalImage = ViewModelProvider(requireActivity()).get(ViewModalImage::class.java)
         mProgressDialog = ProgressDialog(requireContext())
         setupRecycleView()
-        checkAddorEdit()
         setupButtons()
         overrideback()
+
+//        mViewModalImage.setCheckImageSaveFBFalse()
+        mViewModalImage.setcheckdeleteFalse()
+
+        binding_edit.imgbutVisible.visibility = View.GONE
+        mViewModalImage.mListImageAdd.observe(viewLifecycleOwner){
+            Log.d("mạnh đức","Vào mListImage : " + it.toString())
+            mImageAdapter.submitList(it.toMutableList())
+        }
         return binding.root
     }
     private fun setupRecycleView() {
-         mImageAdapter = ImageAdapter(object : IClickListener1 {
-             override fun onClickImage(image: Image) {
-                 mViewModalImage.updateSelectImage(image)
-                 openImageFragment()
-             }
-
-         }, requireContext())
+        mImageAdapter = ImageAdapter(object : IClickListener1 {
+            override fun onClickImage(image: Image) {
+                openImageFragment(image)
+            }
+        }, requireContext())
         binding_edit.rcyPhotos.adapter = mImageAdapter
 
     }
 
-    private fun checkAddorEdit() {
-
-        val bundle = arguments ?: Bundle()
-        val a = bundle.getString("HometoEdit1")
-
-//        mViewModalImage.setCheckImageSaveFalse()
-//        mViewModalImage.setCheckImageSaveFBFalse()
-        mViewModalImage.setcheckdeleteFalse()
-
-
-            Log.d("edtnote", "Old Note ${a}")
-            mViewModalNote.selectNote.observe(viewLifecycleOwner) {
-                showDataForEdit(it)
-                mViewModalImage.getIdNoteforImage(it.idNote);
-            }
-        }
-
-
-    private fun showDataForEdit(note: Note) {
-        binding_edit.edtTitle.setText(note.title)
-        binding_edit.edtDetail.setText(note.detail)
-        idNote = note.idNote
-
-        mViewModalImage.mListImage.observe(viewLifecycleOwner){
-            Log.d("mạnh đức","Vào mListImage : " + it.toString())
-            mImageAdapter.submitList(it.toMutableList())
-//            mViewModalImage.getPathSTFB()
-//            mViewModalImage.getPathImageFirebaseStorage()
-
-        }
-    }
     private fun setupButtons() {
         binding_edit.imgbutSave.setOnClickListener { openDialogSave(Gravity.CENTER) }
         binding_edit.imgBack.setOnClickListener {
@@ -127,11 +96,11 @@ class EditFragment : Fragment() {
         }
         binding_edit.miscellaneous.imgbutAddpic.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                getImage()
+                getImageInDCMI()
             }
             activity?.let {
                 if (hasPermissions(it as Context, PERMISSIONS)) {
-                    getImage()
+                    getImageInDCMI()
                 } else {
                     permReqLauncher.launch(PERMISSIONS)
                 }
@@ -139,26 +108,26 @@ class EditFragment : Fragment() {
         }
     }
 
+
     private val permReqLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-                permissions ->
-            val granted = permissions.entries.all {
-                it.value == true
-            }
-            if (granted) {
-                getImage()
-            }
+            permissions ->
+        val granted = permissions.entries.all {
+            it.value == true
         }
+        if (granted) {
+            getImageInDCMI()
+        }
+    }
     private fun hasPermissions(context: Context, permissions: Array<String>): Boolean = permissions.all {
         ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
     }
-
-    private fun getImage() {
-
+    private fun getImageInDCMI() {
         // open glarry
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
         resultLauncher.launch(intent)
     }
+
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
 
@@ -172,7 +141,7 @@ class EditFragment : Fragment() {
                     selectedImageUri?.let {
                         if (Build.VERSION.SDK_INT < 28) {
                             val bitmap = MediaStore.Images.Media.getBitmap( requireContext().contentResolver,  selectedImageUri)
-                            saveImageInternal(bitmap)
+                            saveImageInternalLocal(bitmap)
 
                         } else {
                             val source = ImageDecoder.createSource(requireContext().contentResolver, selectedImageUri)
@@ -180,7 +149,7 @@ class EditFragment : Fragment() {
                                 decoder.setTargetSampleSize(1) // shrinking by
                                 decoder.isMutableRequired =  true // this resolve the hardware type of bitmap problem
                             }
-                            saveImageInternal(bitmap)
+                            saveImageInternalLocal(bitmap)
                         }
                     }
                 } catch (e: IOException) {
@@ -189,15 +158,18 @@ class EditFragment : Fragment() {
             }
         }
     }
-    fun saveImageInternal(bitmap: Bitmap) {
+    fun saveImageInternalLocal(bitmap: Bitmap) {
+
         val directory = context?.getExternalFilesDir("MyNoteData")
         if (directory != null) {
             if (!directory.exists()) {
                 directory.mkdirs()
             }
         }
+
+        val time:String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
         // Tạo tập tin để lưu ảnh
-        val file = File(directory, SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())+".jpg")
+        val file = File(directory, time+".jpg")
         Log.d("FilePath", file.absolutePath)
 
         try {
@@ -211,95 +183,111 @@ class EditFragment : Fragment() {
             Toast.makeText(requireContext(), "Failed to save image", Toast.LENGTH_SHORT).show()
         }
 
-        val image = Image(file.absolutePath,idNote)
+        //file.absolutePath là đường dẫn của ảnh trong Local Internal Storage
+        val image = Image(file.absolutePath)
         Log.d("Khancapp",image.toString())
+        // Lưu ảnh trong ViewModel tổng
         mViewModalImage.addImageViewModal(image)
+        // Lưu ảnh trong ViewModel Add
         mViewModalImage.addImageViewModalAdd(image)
     }
 
-
     private fun createDialog(layoutResId: Int, gravity: Int): Dialog {
-            val dialog = Dialog(requireContext())
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(layoutResId)
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(layoutResId)
 
-            val window = dialog.window ?: throw IllegalStateException("Dialog has no window")
+        val window = dialog.window ?: throw IllegalStateException("Dialog has no window")
 
-            window.setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT
-            )
-            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            window.attributes.gravity = gravity
+        window.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.attributes.gravity = gravity
 
-            dialog.setCancelable(Gravity.CENTER == gravity)
-            return dialog
-        }
-
+        dialog.setCancelable(Gravity.CENTER == gravity)
+        return dialog
+    }
     private fun openDialogReturn(gravity: Int) {
-            val dialog = createDialog(R.layout.dialog_discardsave, gravity)
-            val btnKeep = dialog.findViewById<Button>(R.id.btn_keep)
-            val btnDiscard = dialog.findViewById<Button>(R.id.btn_discard)
+        val dialog = createDialog(R.layout.dialog_discardsave, gravity)
+        val btnKeep = dialog.findViewById<Button>(R.id.btn_keep)
+        val btnDiscard = dialog.findViewById<Button>(R.id.btn_discard)
 
-            btnKeep.setOnClickListener {
-                mViewModalImage.deleteImageNotSaveDB()
-                parentFragmentManager.popBackStack()
-                dialog.dismiss()
-            }
-            btnDiscard.setOnClickListener { dialog.dismiss() }
-            dialog.show()
-
+        btnKeep.setOnClickListener {
+            mViewModalImage.deleteImageNotSaveDB()
+            parentFragmentManager.popBackStack()
+            dialog.dismiss()
         }
-
+        btnDiscard.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
     private fun openDialogSave(gravity: Int) {
-            val dialog = createDialog(R.layout.dialog_save, gravity)
-            val btnSave = dialog.findViewById<Button>(R.id.btn_save)
-            val btnDiscard = dialog.findViewById<Button>(R.id.btn_discard)
+        val dialog = createDialog(R.layout.dialog_save, gravity)
+        val btnSave = dialog.findViewById<Button>(R.id.btn_save)
+        val btnDiscard = dialog.findViewById<Button>(R.id.btn_discard)
 
-            btnSave.setOnClickListener {
-                saveNotetoDataBase()
-                dialog.dismiss()
-            }
-            btnDiscard.setOnClickListener { dialog.dismiss() }
-
-            dialog.show()
+        btnSave.setOnClickListener {
+            saveNotetoDataBase()
+            dialog.dismiss()
         }
+        btnDiscard.setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+    }
+
+
 
     private fun saveNotetoDataBase() {
         mProgressDialog.show()
-        Log.d("edt", "Cập nhật Note cũ")
-        mViewModalNote.updateNoteEdit(Note(binding_edit.edtTitle.text.toString(), binding_edit.edtDetail.text.toString()));
-        mViewModalImage.updateIdNoteForImage()
+        mViewModalNote.addNoteViewmodel(Note(binding_edit.edtTitle.text.toString(), binding_edit.edtDetail.text.toString()))
 
-        mViewModalImage.checkdelete.observe(viewLifecycleOwner,{
-            if(it){
-                mProgressDialog.dismiss()
-                parentFragmentManager.popBackStack()
-            }
+        mViewModalNote.checkgetid?.observe(viewLifecycleOwner,{
+                if(it){
+                        mViewModalNote.getIdNoteFromRoom?.observe(viewLifecycleOwner,{
+                        Log.d("ManhDuc ","Vào getIdNoteFromRoom"+it.toString())
+                            // Hàm này đẩy IdNote vào Image()
+                            mViewModalImage.getIdNoteforImage(it)
+                            mViewModalImage.updateIdNoteForImage()
+                            // Hàm này để cho idNote lấy ra về trạng thái false
+                        mViewModalNote.checkgetidtoFalse()
+//                            idNote = it;
+                    })
 
-        })
+                }
+            })
 
-        }
+            mViewModalImage.checkImageSave.observe(viewLifecycleOwner,{
+                if(it == true){
+                    Log.d("Manh Duc","Vào được checkImageSaveFB ")
+                    mProgressDialog.dismiss()
+                    parentFragmentManager.popBackStack()
+                }
+            })
 
-    private fun openImageFragment() {
+
+
+
+    }
+    private fun openImageFragment(image: Image) {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.frag_layout, ImageFragment::class.java,null)
+            .replace(R.id.frag_layout, ImageFragment::class.java,Bundle().apply {
+                putString("Path_image",image.path)
+            })
             .addToBackStack(null)
             .commit()
     }
-        private fun overrideback() {
-            requireActivity().onBackPressedDispatcher
-                .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        if (parentFragmentManager.backStackEntryCount > 0) {
-                            openDialogReturn(Gravity.CENTER)
-                        } else {
-                            // Không có fragment trong back stack, xử lý theo ý muốn
-                            requireActivity().finish()
-                        }
+    private fun overrideback() {
+        requireActivity().onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (parentFragmentManager.backStackEntryCount > 0) {
+                        openDialogReturn(Gravity.CENTER)
+                    } else {
+                        // Không có fragment trong back stack, xử lý theo ý muốn
+                        requireActivity().finish()
                     }
-                })
-        }
-
+                }
+            })
+    }
 }
-

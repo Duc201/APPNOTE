@@ -39,6 +39,7 @@ class RegisterActivity : AppCompatActivity() {
 
         if(mViewModelAuth.checkValidEmail(this,email) && mViewModelAuth.checkValidPassword(this, pass) && mViewModelAuth.checkValidPassword(this,confirmPass)
             && mViewModelAuth.checkValidRePassword(this, pass, confirmPass)){
+
             mViewModelAuth.register(this,email,pass)
         }
 

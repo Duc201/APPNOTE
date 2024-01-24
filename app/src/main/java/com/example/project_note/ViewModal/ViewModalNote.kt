@@ -1,16 +1,21 @@
 package com.example.project_note.ViewModal
 
+import SingleLiveEvent
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.project_note.DataBase.Image
+
 import com.example.project_note.DataBase.Note
 import com.example.project_note.DataBase.NoteDatabase
-import com.example.project_note.Repository.ImageRepository
 import com.example.project_note.Repository.NoteRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,19 +31,37 @@ class ViewModalNote(application: Application) : AndroidViewModel(application) {
     private val _selectedNote = MutableLiveData<Note>()
     public val selectNote: LiveData<Note> get() = _selectedNote
 
-    val repository: NoteRepository
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private lateinit var  listQuery : MutableList<Note>
 
+
+    private var _getIdNoteFromRoom: MutableLiveData<Int> = MutableLiveData()
+    public val getIdNoteFromRoom get() = _getIdNoteFromRoom
+
+
+
+    private var _checkgetid: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    public val checkgetid get() = _checkgetid
+
+
+
+    private lateinit var notecurrent: Note;
+
+
+    val repository: NoteRepository
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
 
     init {
         val dao = NoteDatabase.getInstance(application).noteDAO()
         repository = NoteRepository(dao)
         getListNotes()
+        _checkgetid.value=false
     }
 
+fun checkgetidtoFalse(){
+    _checkgetid.value = false
+}
 
     fun onFilterChange(query: String){
         filterNote.filter.filter(query)
@@ -70,10 +93,9 @@ class ViewModalNote(application: Application) : AndroidViewModel(application) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ lists ->
-                    Log.d("AAA","getListNotestart")
                             _mListNote.value = lists
                             listQuery = lists
-                           Log.d("AAA","getListNoteend")},
+                           Log.d("AAA","Lấy được getListNote từ Room")},
                     { throwable -> })
         )
     }
@@ -85,10 +107,24 @@ class ViewModalNote(application: Application) : AndroidViewModel(application) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { Log.d("AAA", "Insert success") },
+                    { isInsertNote ->
+//                        _checkInsertNote.value = isInsertNote
+                       Log.e("ManhDuc","Insert Note trong Rom thành công")
+                        getId(notecurrent.title,notecurrent.detail);
+                        getListNotes();
+                    },
                     { throwable -> Log.e("AAA", "Insert error: ${throwable.message}") }
                 )
         )
+    }
+    public fun addNoteViewmodel(note: Note){
+        notecurrent = note;
+        addNote(note);
+    }
+    public fun updateNoteEdit(note: Note){
+            notecurrent = note
+            notecurrent.idNote = selectNote.value!!.idNote
+             InsertNoteToRealTime(notecurrent)
     }
 
 
@@ -99,12 +135,30 @@ class ViewModalNote(application: Application) : AndroidViewModel(application) {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { Log.d("viemmodal", "Update success") },
+                    { Log.d("viemmodal", "Update Note To ROOM success") },
                     { throwable -> Log.e("AAA", "Update error: ${throwable.message}") }
                 )
 
         )
     }
+    fun getId(title:String , detail:String){
+        compositeDisposable.add(
+            repository.getID(title,detail)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { id->
+                        _checkgetid.value = true
+                        _getIdNoteFromRoom?.value = id
+                        notecurrent.idNote = id
+                        InsertNoteToRealTime(notecurrent)
+
+                    Log.d("ManhDuc","Lấy Id thành công")},
+                    { throwable -> Log.e("AAA", "Query error: ${throwable.message}") }
+                )
+        )
+    }
+
 
     public fun deleteNote(note: Note) {
         compositeDisposable.add(
@@ -122,29 +176,60 @@ class ViewModalNote(application: Application) : AndroidViewModel(application) {
         // Xem lại
         _selectedNote.value = note
 
-//        val listData = _mListNote.value
-//        val index = listData?.indexOf(note)
-//        _mListNote.value = listData
-//
-//        if (index != null) {
-//            listData?.set(index, note)
-//        }
-//        _mListNote.value = listData
     }
 
-//    public fun getID(title:String, detail:String) : Int{
-//        compositeDisposable.add(
-//            repository.getID(title,detail)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(
-//                    { id -> handleID(id) },
-//                    { throwable -> Log.e("AAA", "Delete error: ${throwable.message}") }
-//                )
-//        )
-//
-//    }
+    fun InsertNoteToRealTime(note:Note){
+        compositeDisposable.add(
+            repository.insertToRealTime(note)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { Log.d("AAA", "Insert Note success to FireBase") },
+                    { throwable -> Log.e("AAA", "Delete error: ${throwable.message}") }
+                )
+        )
+    }
+    fun DeleteNoteToRealTime(note:Note){
+        compositeDisposable.add(
+            repository.deleteToRealTime(note)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { Log.d("AAA", "Delete Note success to FireBase") },
+                    { throwable -> Log.e("AAA", "Delete error: ${throwable.message}") }
+                )
+        )
+    }
+     fun isInternetAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.run {
+                connectivityManager.activeNetworkInfo?.run {
+                    result = when (type) {
+                        ConnectivityManager.TYPE_WIFI -> true
+                        ConnectivityManager.TYPE_MOBILE -> true
+                        ConnectivityManager.TYPE_ETHERNET -> true
+                        else -> false
+                    }
 
+                }
+            }
+        }
+
+        return result
+    }
 
     public fun onClickDeleteNote(note: Note) {
         val listData = _mListNote.value
@@ -157,6 +242,9 @@ class ViewModalNote(application: Application) : AndroidViewModel(application) {
         listData?.add(index, note)
         _mListNote.value = listData
     }
+//    fun InsertNoteToRealTime(){
+//
+//    }
 
 
 }

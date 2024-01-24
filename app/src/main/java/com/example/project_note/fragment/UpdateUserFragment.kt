@@ -38,7 +38,9 @@ class UpdateUserFragment : Fragment() {
     ): View? {
         binding = FragmentInformationAccountBinding.inflate(inflater,container,false)
         mViewModelAuth = ViewModelProvider(requireActivity()).get(AuthViewModel::class.java)
+
         mViewModelAuth.getInformationUser(requireContext())
+
         mViewModelAuth.userResponse.observe(viewLifecycleOwner){
             binding.txtEmail.setText(it.email)
             binding.txtName.setText(it.name)

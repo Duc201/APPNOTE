@@ -29,40 +29,36 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         mViewModelAuth = ViewModelProvider(this).get(AuthViewModel::class.java)
+
+
         clickbutton()
         checkSharedPreference()
+
+
+
         mViewModelAuth.userResponse.observe(this){
+
+
             val email = binding.txtEmail.text.toString()
             val pass = binding.txtPass.text.toString()
+
             if(it.email.equals(email)&& it.pass.equals(pass)){
-                Log.d("Check","2"+it.toString())
-                openMainActivity()
-               Toast.makeText(this, "Login Succed", Toast.LENGTH_SHORT).show()
                     if (binding.checkbox.isChecked) {
                         val editor = sharedpreferences.edit()
                         editor.putBoolean(CHECKBOX_KEY, true)
-                        editor.apply()
                         editor.putString(EMAIL_KEY,  binding.txtEmail.text.toString())
-                        editor.commit()
                         editor.putString(PASSWORD_KEY, binding.txtPass.text.toString())
-                        editor.commit()
-                    } else {
-                        val editor = sharedpreferences.edit()
-                        editor.putBoolean(CHECKBOX_KEY, false)
-                        editor.commit()
-                        editor.putString(EMAIL_KEY, "")
-                        editor.commit()
-                        editor.putString(PASSWORD_KEY, "")
                         editor.commit()
                     }
             }
+            openMainActivity()
+
         }
         setContentView(binding.root)
 
     }
 
     private fun checkSharedPreference() {
-        Log.d("Check","1")
         sharedpreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
         binding.txtEmail.setText(sharedpreferences.getString(EMAIL_KEY, ""))
         binding.txtPass.setText(sharedpreferences.getString(PASSWORD_KEY, ""))

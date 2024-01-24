@@ -14,8 +14,8 @@ import io.reactivex.Single
 
 @Dao
 interface NoteDAO {
-    @Insert
-    fun insertNote(note: Note) : Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertNote(note: Note) : Long
 
     @Update
     fun updateNote(note: Note) : Completable

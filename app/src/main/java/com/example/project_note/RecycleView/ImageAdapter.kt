@@ -1,5 +1,6 @@
 package com.example.project_note.RecycleView
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,9 +9,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project_note.DataBase.Image
 import com.example.project_note.DataBase.Note
+import com.example.project_note.R
 import com.example.project_note.databinding.ItemPhotosBinding
+import com.squareup.picasso.Picasso
 
-class ImageAdapter(private val mIClickListener1: IClickListener1)
+class ImageAdapter(private val mIClickListener1: IClickListener1, val context: Context)
     :ListAdapter<Image,ImageAdapter.ImageViewHodel>(DIFF_CALLBACK) {
 
     companion object {
