@@ -6,9 +6,9 @@ APP NOTES
  + Khi thoát đăng nhập dữ liệu trong Room, Sharereference sẽ bị xóa hết 
  + Khi đăng nhập trên thiết bị mới sẽ đồng bộ dữ liệu từ firebase về và lưu trong Room
 
-Link Demo: 
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/863df21e-1980-46a8-8e02-9f2644a04465)
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/5844581f-349f-49db-82b0-9ecaddec122a)
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/c5f18b51-f6d7-4eba-8cd1-fad1a00111c2)
+Link Demo: https://www.youtube.com/watch?v=uf0-N-RWmmc
+![image](https://github.com/Duc201/APPNOTE/assets/128071699/7dfabb38-dbf8-4e1d-ba11-3af6664843d5)
+![image](https://github.com/Duc201/APPNOTE/assets/128071699/966b2683-2e5e-44f9-be20-b85796a0d330)
+
 
 
