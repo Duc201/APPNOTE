@@ -7,8 +7,7 @@ APP NOTES
  + Khi đăng nhập trên thiết bị mới sẽ đồng bộ dữ liệu từ firebase về và lưu trong Room
 
 Link Demo: https://www.youtube.com/watch?v=uf0-N-RWmmc
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/7dfabb38-dbf8-4e1d-ba11-3af6664843d5)
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/966b2683-2e5e-44f9-be20-b85796a0d330)
+
 
 
 
