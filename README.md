@@ -5,8 +5,10 @@ APP NOTES
  + Thêm, sửa, xóa Note sử dụng firebase realtime và Room để lưu dữ liệu. Khi thiết bị Offline sẽ lưu trong Room. Khi thiết bị Online sẽ lưu vào cả Room và FireBase. Mỗi khi mở app và có kết nối Internet sẽ đồng bộ với FireBase
  + Khi thoát đăng nhập dữ liệu trong Room, Sharereference sẽ bị xóa hết 
  + Khi đăng nhập trên thiết bị mới sẽ đồng bộ dữ liệu từ firebase về và lưu trong Room
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/34a9e291-2c8b-48f3-a0ce-32baf265ba1b)
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/ce18dc90-93c5-430d-9100-3c27f9a75bb4)
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/c1602cc3-1209-4aac-b7cf-7583b7654d46)
-![image](https://github.com/Duc201/APPNOTE/assets/128071699/d4c5bb7f-a5b8-4e8c-b040-64d4f28c18e3)
+
+Link Demo: 
+![image](https://github.com/Duc201/APPNOTE/assets/128071699/863df21e-1980-46a8-8e02-9f2644a04465)
+![image](https://github.com/Duc201/APPNOTE/assets/128071699/5844581f-349f-49db-82b0-9ecaddec122a)
+![image](https://github.com/Duc201/APPNOTE/assets/128071699/c5f18b51-f6d7-4eba-8cd1-fad1a00111c2)
+
 
